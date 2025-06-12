@@ -8,7 +8,13 @@ query all resources and outputs the results as JSON or CSV.
 ## Installation
 
 ```bash
-pip install -r requirements.txt
+pip install gcpri
+```
+
+To install the latest code directly from this repository, clone the repo and run:
+
+```bash
+pip install -e .
 ```
 
 You must also ensure that the Cloud Asset API is enabled and that the
