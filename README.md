@@ -1,0 +1,2 @@
+# GCPRI
+GCP Resource Inventory
