@@ -15,7 +15,15 @@ def list_assets(project_id: str) -> List[Dict]:
         content_type=asset_v1.ContentType.RESOURCE,
     )
     for asset in client.list_assets(request=request):
-        location = getattr(getattr(asset, "resource", None), "location", None)
+        resource = getattr(asset, "resource", None)
+        location = None
+        if resource is not None:
+            location = getattr(resource, "location", None)
+            if location is None and getattr(resource, "data", None):
+                try:
+                    location = resource.data.get("location")
+                except Exception:
+                    location = None
         assets.append(
             {
                 "asset_type": asset.asset_type,
