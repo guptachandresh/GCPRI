@@ -6,9 +6,8 @@ from typing import List, Dict
 from google.cloud import asset_v1
 
 
-def list_assets(project_id: str) -> List[Dict]:
+def list_assets(scope: str) -> List[Dict]:
     client = asset_v1.AssetServiceClient()
-    scope = f"projects/{project_id}"
     assets = []
     request = asset_v1.ListAssetsRequest(
         parent=scope,
@@ -28,7 +27,7 @@ def list_assets(project_id: str) -> List[Dict]:
             {
                 "asset_type": asset.asset_type,
                 "name": asset.name,
-                "project": project_id,
+                "scope": scope,
                 "location": location,
             }
         )
@@ -56,7 +55,9 @@ def write_output(records: List[Dict], output_format: str, output_path: str):
 
 def main():
     parser = argparse.ArgumentParser(description="GCP Resource Inventory")
-    parser.add_argument("project_ids", nargs="+", help="GCP project IDs to inventory")
+    parser.add_argument("project_ids", nargs="*", help="GCP project IDs to inventory")
+    parser.add_argument("--folders", nargs="*", default=[], help="GCP folder IDs to inventory")
+    parser.add_argument("--organizations", nargs="*", default=[], help="GCP organization IDs to inventory")
     parser.add_argument(
         "--format",
         choices=["json", "csv"],
@@ -76,11 +77,28 @@ def main():
         format="%(message)s",
     )
 
-    all_records = []
+    scopes: List[str] = []
     for pid in args.project_ids:
-        logging.info("Collecting assets for %s...", pid)
-        records = list_assets(pid)
-        logging.info("Found %d assets in %s", len(records), pid)
+        if pid.startswith("projects/"):
+            scopes.append(pid)
+        else:
+            scopes.append(f"projects/{pid}")
+    for fid in args.folders:
+        if fid.startswith("folders/"):
+            scopes.append(fid)
+        else:
+            scopes.append(f"folders/{fid}")
+    for oid in args.organizations:
+        if oid.startswith("organizations/"):
+            scopes.append(oid)
+        else:
+            scopes.append(f"organizations/{oid}")
+
+    all_records = []
+    for scope in scopes:
+        logging.info("Collecting assets for %s...", scope)
+        records = list_assets(scope)
+        logging.info("Found %d assets in %s", len(records), scope)
         all_records.extend(records)
 
     write_output(all_records, args.format, args.output)

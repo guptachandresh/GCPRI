@@ -1,7 +1,8 @@
 # GCPRI
 
 GCP Resource Inventory (GCPRI) is a simple utility for collecting an
-inventory of GCP resources across one or more projects. It uses the
+inventory of GCP resources across one or more scopes (projects, folders
+or organizations). It uses the
 [Cloud Asset API](https://cloud.google.com/asset-inventory/docs/apis) to
 query all resources and outputs the results as JSON or CSV.
 
@@ -34,11 +35,16 @@ gcloud asset search-all-resources --scope="projects/PROJECT_ID" --limit=1
 ## Usage
 
 ```bash
-python -m gcpri PROJECT_ID [ANOTHER_PROJECT] --output inventory.json
+python -m gcpri PROJECT_ID [ANOTHER_PROJECT] \
+    --folders FOLDER_ID [ANOTHER_FOLDER] \
+    --organizations ORG_ID [ANOTHER_ORG] \
+    --output inventory.json
 ```
 
-Use `--format csv` to output a CSV file instead of JSON.
-Pass `--verbose` to see informational logs during execution.
+Pass folder or organization IDs with the `--folders` and `--organizations`
+flags. Each may be specified multiple times. Use `--format csv` to output a
+CSV file instead of JSON. Pass `--verbose` to see informational logs during
+execution.
 
 ## License
 

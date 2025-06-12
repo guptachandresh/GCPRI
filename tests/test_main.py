@@ -35,6 +35,6 @@ def test_list_assets_no_location():
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     main = importlib.import_module('gcpri.main')
 
-    records = main.list_assets('proj')
-    assert records == [{'asset_type': 'type', 'name': 'name', 'project': 'proj', 'location': None}]
+    records = main.list_assets('projects/proj')
+    assert records == [{'asset_type': 'type', 'name': 'name', 'scope': 'projects/proj', 'location': None}]
 
