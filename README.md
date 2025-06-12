@@ -14,6 +14,23 @@ pip install -r requirements.txt
 You must also ensure that the Cloud Asset API is enabled and that the
 calling account has sufficient permissions (typically `roles/viewer`).
 
+## Authentication
+
+The script uses Application Default Credentials to call the Cloud
+Asset API. You can authenticate by either setting the
+`GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path of a
+service account key file or by logging in with `gcloud`:
+
+```bash
+gcloud auth application-default login
+```
+
+Verify that the credentials work by listing resources with `gcloud`:
+
+```bash
+gcloud asset search-all-resources --scope="projects/PROJECT_ID" --limit=1
+```
+
 ## Usage
 
 ```bash
