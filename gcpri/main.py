@@ -14,12 +14,13 @@ def list_assets(project_id: str) -> List[Dict]:
         content_type=asset_v1.ContentType.RESOURCE,
     )
     for asset in client.list_assets(request=request):
+        location = getattr(getattr(asset, "resource", None), "location", None)
         assets.append(
             {
                 "asset_type": asset.asset_type,
                 "name": asset.name,
                 "project": project_id,
-                "location": asset.resource.location,
+                "location": location,
             }
         )
     return assets
