@@ -21,3 +21,4 @@ python -m gcpri PROJECT_ID [ANOTHER_PROJECT] --output inventory.json
 ```
 
 Use `--format csv` to output a CSV file instead of JSON.
+Pass `--verbose` to see informational logs during execution.

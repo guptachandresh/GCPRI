@@ -1,5 +1,6 @@
 import argparse
 import json
+import logging
 from typing import List, Dict
 
 from google.cloud import asset_v1
@@ -55,17 +56,27 @@ def main():
         help="Output format",
     )
     parser.add_argument("--output", required=True, help="Output file path")
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Increase output verbosity",
+    )
     args = parser.parse_args()
+
+    logging.basicConfig(
+        level=logging.INFO if args.verbose else logging.WARNING,
+        format="%(message)s",
+    )
 
     all_records = []
     for pid in args.project_ids:
-        print(f"Collecting assets for {pid}...")
+        logging.info("Collecting assets for %s...", pid)
         records = list_assets(pid)
-        print(f"Found {len(records)} assets in {pid}")
+        logging.info("Found %d assets in %s", len(records), pid)
         all_records.extend(records)
 
     write_output(all_records, args.format, args.output)
-    print(f"Wrote {len(all_records)} records to {args.output}")
+    logging.info("Wrote %d records to %s", len(all_records), args.output)
 
 
 if __name__ == "__main__":
