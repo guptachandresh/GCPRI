@@ -20,4 +20,11 @@ calling account has sufficient permissions (typically `roles/viewer`).
 python -m gcpri PROJECT_ID [ANOTHER_PROJECT] --output inventory.json
 ```
 
-Use `--format csv` to output a CSV file instead of JSON.
+Use `--format csv` to output a CSV file instead of JSON. To load the results
+into BigQuery, supply a table name with `--bq-table`:
+
+```bash
+python -m gcpri my-project --output inv.json --bq-table mydataset.inventory
+```
+
+You can also filter by asset type using one or more `--asset-type` flags.
